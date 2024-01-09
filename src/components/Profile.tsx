@@ -27,11 +27,11 @@ const Profiles = () => {
     const [education, setEducation] = useState<string>('');
     const [cv, setCV] = useState<File | null>(null);
     const [error, setError] = useState<string>('');
-    const [skill, setSkill] = useState<string>('');
     const [loading, setLoading] = useState(false);
     const [cvFileName, setCVFileName] = useState('');
     const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
     const [profilePhotoFileName, setProfilePhotoFileName] = useState('');
+    const [skill, setSkill] = useState<string[]>([]);
     const [profilePhotoUrl, setProfilePhotoUrl] = useState<string>(defaultProfilePhotoUrl);
 
 
@@ -43,8 +43,8 @@ const Profiles = () => {
         setExperiance(event.target.value);
         setError('');
     };
-    const handleSkillChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSkill(event.target.value);
+    const handleSkillChange = (event: React.ChangeEvent<{}>, value: string[]) => {
+        setSkill(value);
     };
 
     const handleEducationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +110,7 @@ const Profiles = () => {
         try {
             const savedAccessToken = localStorage.getItem("AccessToken");
             const formData = new FormData();
-            formData.append('skill', skill);
+            formData.append('skill', skill.join(','));
             formData.append('experience', experiance);
             formData.append('cv', cv as File);
             formData.append('photo', profilePhoto as File)
@@ -212,6 +212,7 @@ const Profiles = () => {
                                         id="skill"
                                         options={hardcodedSkills}
                                         getOptionLabel={(option) => option}
+                                        onChange={handleSkillChange}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
@@ -219,7 +220,6 @@ const Profiles = () => {
                                                 variant="outlined"
                                                 placeholder="Enter your skill"
                                                 value={skill}
-                                                onChange={handleSkillChange}
                                             />
                                         )}
                                     />
@@ -251,28 +251,28 @@ const Profiles = () => {
                             </Grid>
                             <br /><br />
                             <Grid item xs={6}>
-                            <label
-                                                htmlFor="cv"
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    marginLeft: '80px',
-                                                    color: 'black',
-                                                    width: '200px',
-                                                    height: '40px',
-                                                }}
-                                            >
-                                                <CloudUploadIcon sx={{ marginRight: 1, color: cvFileName ? 'green' : 'blue', flexShrink: 0 }} />
-                                                <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', color: '#fff' }}>
-                                                    {cvFileName ? <p style={{color: '#04d9ff'}}>{cvFileName}</p> : 'Upload CV'}
-                                                </div>
-                                            </label>
-                                            <input
-                                                id="cv"
-                                                type="file"
-                                                onChange={handleCVChange}
-                                                style={{ display: 'none' }}
-                                            />
+                                <label
+                                    htmlFor="cv"
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginLeft: '80px',
+                                        color: 'black',
+                                        width: '200px',
+                                        height: '40px',
+                                    }}
+                                >
+                                    <CloudUploadIcon sx={{ marginRight: 1, color: cvFileName ? 'green' : 'blue', flexShrink: 0 }} />
+                                    <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', color: '#fff' }}>
+                                        {cvFileName ? <p style={{ color: '#04d9ff' }}>{cvFileName}</p> : 'Upload CV'}
+                                    </div>
+                                </label>
+                                <input
+                                    id="cv"
+                                    type="file"
+                                    onChange={handleCVChange}
+                                    style={{ display: 'none' }}
+                                />
                             </Grid>
                             <br />
                             <Grid item xs={12}>
@@ -282,7 +282,7 @@ const Profiles = () => {
                                         type="submit"
                                         onClick={handleSubmit}
                                         disabled={isSubmitDisabled()}
-                                        sx={{ width: '100%', marginTop: '4%', backgroundColor:'#04d9ff' }}
+                                        sx={{ width: '100%', marginTop: '4%', backgroundColor: '#04d9ff' }}
                                     >
                                         Submit
                                     </Button>
@@ -293,7 +293,7 @@ const Profiles = () => {
                     <Button
                         variant="text"
                         onClick={handleSkip}
-                        sx={{ position: 'absolute', top: '70px', right: '10px', color:'#04d9ff' }}
+                        sx={{ position: 'absolute', top: '70px', right: '10px', color: '#04d9ff' }}
                     >
                         Skip
                     </Button>

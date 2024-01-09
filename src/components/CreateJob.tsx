@@ -17,6 +17,23 @@ const defaultTheme = createTheme({
     },
 });
 
+const timeAgo = (timestamp: string) => {
+    const currentDate = new Date();
+    const createdAt = new Date(timestamp);
+    const timeDifference = currentDate.getTime() - createdAt.getTime();
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+
+    if (hours > 0) {
+        return `${hours}hr ago`;
+    } else if (minutes > 0) {
+        return `${minutes}min ago`;
+    } else {
+        return 'Just now';
+    }
+};
+
 interface CompanyData {
     id: string;
     type: string;
@@ -37,31 +54,31 @@ const CreateJob = () => {
     const [position, setPosition] = useState<string>('');
     const [experience, setExperience] = useState<string>('');
     const [salary, setSalary] = useState<number>(0);
-    const [skillrequired, setSkillrequired] = useState<string>('');
+    const [skillrequired, setSkillrequired] = useState<string[]>([]);
     const [smalldescription, setSmalldescription] = useState<string>('');
 
     const handlePositionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPosition(event.target.value);
-      };
+    };
 
-      const handleExperianceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleExperianceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setExperience(event.target.value);
-      };
+    };
 
-      const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSalaryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSalary(Number(event.target.value));
-      };
+    };
 
-      const handleSkillChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSkillrequired(event.target.value);
-        console.log('skilsssssssssssssssss',skillrequired)
-      };
+    const handleSkillChange = (event: React.ChangeEvent<{}>, value: string[]) => {
+        setSkillrequired(value);
+        console.log('skilsssssssssssssssss', skillrequired)
+    };
 
-      const handleSmallDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSmallDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSmalldescription(event.target.value);
-      };
+    };
 
-      const fetchJobs = async () => {
+    const fetchJobs = async () => {
         try {
             const savedAccessToken = localStorage.getItem("AccessToken");
             const jobsResponse = await axios.get('http://localhost:3000/company_jobs', {
@@ -76,7 +93,7 @@ const CreateJob = () => {
     };
 
 
-      useEffect(() => {
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const savedAccessToken = localStorage.getItem("AccessToken");
@@ -107,14 +124,14 @@ const CreateJob = () => {
 
     const handleCreateJobs = () => {
         setOpenModal(true);
-      };
+    };
 
     const handleCloseModal = () => {
         setOpenModal(false);
         setPosition('');
         setExperience('');
         setSalary(0);
-        setSkillrequired('');
+        setSkillrequired([]);
         setSmalldescription('');
     };
 
@@ -146,13 +163,13 @@ const CreateJob = () => {
 
         try {
             const savedAccessToken = localStorage.getItem("AccessToken");
-            
+
             if (companyData) {
                 const formData = new FormData();
                 formData.append('position', position);
                 formData.append('experience', experience);
                 formData.append('salary', salary.toString());
-                formData.append('skills_required', skillrequired);
+                formData.append('skills_required', skillrequired.join(','));
                 formData.append('small_description', smalldescription);
                 formData.append('company_id', companyData.id);
 
@@ -233,125 +250,125 @@ const CreateJob = () => {
                                 </div>
                             </div>
                         )}
-                <Button
-                    size="large"
-                    variant="text"
-                    component="a"
-                    sx={{ position: 'absolute', top: '70px', right: '10px', color:'#04d9ff' }}
-                    onClick={handleCreateJobs}
-                >
-                   +  Create Job
-                </Button>
+                        <Button
+                            size="large"
+                            variant="text"
+                            component="a"
+                            sx={{ position: 'absolute', top: '70px', right: '10px', color: '#04d9ff' }}
+                            onClick={handleCreateJobs}
+                        >
+                            +  Create Job
+                        </Button>
                     </div>
-                   
+
                 </Box>
             </Box>
             {jobProfiles.length > 0 && (
-                    <div>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Typography variant="h4" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft:'10px' }}>
-                                Opennings
-                            </Typography>
-                        </Box>
-                        {jobProfiles.map((job: any) => (
-                            <Paper key={job.id} sx={{ padding: 2, marginTop: '10px', display: 'flex', alignItems: 'center', minWidth:500 }}>
-                                <div style={{ marginRight: '20px' }}>
-                                    <BusinessCenterIcon sx={{ marginRight: '5px', minHeight: 200, minWidth: 200 }} />
-                                </div>
-                                <div style={{ textAlign: 'left' }}>
-                                    <Typography variant="h5" style={{ color: '#04d9ff' }}>{job.position}</Typography>
-                                    <Typography variant="body1">
-                                        Experience: {job.experience}
-                                    </Typography>
-                                    <Typography variant="body2">Salary: ${job.salary}</Typography>
-                                    <Typography variant="body2">{job.skills_required}</Typography>
-                                    <Typography variant="body2">{job.small_description}</Typography>
-                                    <Typography variant="body2" style={{ color: 'gray' }}>{new Date().toDateString()}</Typography>
-                                </div>
-                            </Paper>
-                        ))}
-                    </div>
-                )}
-
-                <Modal open={openModal} onClose={handleCloseModal}>
-                  <Box sx={{ width: 500, height: 600, margin: 'auto', marginTop: '50px', overflowY: 'auto' }}>
-                    <Paper sx={{ padding: 2 }}>
-                      <Typography variant="h6" style={{ marginLeft: "35%", fontWeight: 600, color:'#04d9ff' , marginBottom:"3%" }}>Create Job</Typography>
-                      <TextField
-                        id="filled-hidden-label-normal"
-                        defaultValue=""
-                        label="Position"
-                        required
-                        variant="outlined"
-                        value={position}
-                        onChange={handlePositionChange}
-                        placeholder="Enter Position"
-                        sx={{ width: '100%' }}
-                      />
-                      <br/><br/>
-                      <TextField
-                        id="filled-hidden-label-normal"
-                        defaultValue=""
-                        label="Experiance"
-                        required
-                        variant="outlined"
-                        value={experience}
-                        onChange={handleExperianceChange}
-                        placeholder="Enter Experiance Required"
-                        sx={{ width: '100%' }}
-                      />
-                      <br/><br/>
-                      <TextField
-                        id="filled-hidden-label-normal"
-                        defaultValue=""
-                        label="Salary"
-                        required
-                        variant="outlined"
-                        value={salary}
-                        onChange={handleSalaryChange}
-                        placeholder="Enter Salary Range"
-                        sx={{ width: '100%' }}
-                      />
-                      <br/><br/>
-                      <Autocomplete
-                                        multiple
-                                        id="skill"
-                                        options={hardcodedSkills}
-                                        getOptionLabel={(option) => option}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Skill"
-                                                variant="outlined"
-                                                placeholder="Enter Skill Required"
-                                                value={skillrequired || ''}
-                                                onChange={handleSkillChange}
-                                            />
-                                        )}
-                                    />
-                      <br/>
-                      <TextField
-                        id="filled-hidden-label-normal"
-                        defaultValue=""
-                        label="Description"
-                        required
-                        variant="outlined"
-                        value={smalldescription}
-                        onChange={handleSmallDescriptionChange}
-                        placeholder="Enter the job Requirements(Optinal)"
-                        sx={{ width: '100%' }}
-                      />
-                      <br/><br/>
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Box sx={{ marginLeft: 2 }}>
-                        <Button variant="contained" onClick={handleSubmit}  sx={{ minWidth: 150, backgroundColor: '#04d9ff' }}>
-                            Add
-                        </Button>
+                <div>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Typography variant="h4" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
+                            Opennings
+                        </Typography>
                     </Box>
-                </Box>
+                    {jobProfiles.map((job: any) => (
+                        <Paper key={job.id} sx={{ padding: 2, marginTop: '10px', display: 'flex', alignItems: 'center', minWidth: 500 }}>
+                            <div style={{ marginRight: '20px' }}>
+                                <BusinessCenterIcon sx={{ marginRight: '5px', minHeight: 200, minWidth: 200 }} />
+                            </div>
+                            <div style={{ textAlign: 'left' }}>
+                                <Typography variant="h5" style={{ color: '#04d9ff' }}>{job.position}</Typography>
+                                <Typography variant="body1" style={{ color: 'gray' }}>
+                                    Experience: {job.experience}
+                                </Typography>
+                                <Typography variant="body2" style={{ color: 'gray' }}>Salary: ${job.salary}</Typography>
+                                <Typography variant="body2" style={{ color: 'gray' }}>Skill: {job.skills_required}</Typography>
+                                <Typography variant="body2" style={{ color: 'gray' }}>{job.small_description}</Typography>
+                                <Typography variant="body2" style={{ color: 'gray' }}>{timeAgo(job.created_at)}</Typography>
+                            </div>
+                        </Paper>
+                    ))}
+                </div>
+            )}
+
+            <Modal open={openModal} onClose={handleCloseModal}>
+                <Box sx={{ width: 500, height: 600, margin: 'auto', marginTop: '50px', overflowY: 'auto' }}>
+                    <Paper sx={{ padding: 2 }}>
+                        <Typography variant="h6" style={{ marginLeft: "35%", fontWeight: 600, color: '#04d9ff', marginBottom: "3%" }}>Create Job</Typography>
+                        <TextField
+                            id="filled-hidden-label-normal"
+                            defaultValue=""
+                            label="Position"
+                            required
+                            variant="outlined"
+                            value={position}
+                            onChange={handlePositionChange}
+                            placeholder="Enter Position"
+                            sx={{ width: '100%' }}
+                        />
+                        <br /><br />
+                        <TextField
+                            id="filled-hidden-label-normal"
+                            defaultValue=""
+                            label="Experiance"
+                            required
+                            variant="outlined"
+                            value={experience}
+                            onChange={handleExperianceChange}
+                            placeholder="Enter Experiance Required"
+                            sx={{ width: '100%' }}
+                        />
+                        <br /><br />
+                        <TextField
+                            id="filled-hidden-label-normal"
+                            defaultValue=""
+                            label="Salary"
+                            required
+                            variant="outlined"
+                            value={salary}
+                            onChange={handleSalaryChange}
+                            placeholder="Enter Salary Range"
+                            sx={{ width: '100%' }}
+                        />
+                        <br /><br />
+                        <Autocomplete
+                            multiple
+                            id="skill"
+                            options={hardcodedSkills}
+                            getOptionLabel={(option) => option}
+                            onChange={handleSkillChange}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Skill"
+                                    variant="outlined"
+                                    placeholder="Enter Skill Required"
+                                    value={skillrequired || ''}
+                                />
+                            )}
+                        />
+                        <br />
+                        <TextField
+                            id="filled-hidden-label-normal"
+                            defaultValue=""
+                            label="Description"
+                            required
+                            variant="outlined"
+                            value={smalldescription}
+                            onChange={handleSmallDescriptionChange}
+                            placeholder="Enter the job Requirements(Optinal)"
+                            sx={{ width: '100%' }}
+                        />
+                        <br /><br />
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Box sx={{ marginLeft: 2 }}>
+                                <Button variant="contained" onClick={handleSubmit} sx={{ maxHeight: 30, minWidth: 70, backgroundColor: '#04d9ff' }}>
+                                    Add
+                                </Button>
+                            </Box>
+                        </Box>
                     </Paper>
-                  </Box>
-                </Modal>
+                </Box>
+            </Modal>
         </ThemeProvider>
     );
 };

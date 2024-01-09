@@ -33,7 +33,7 @@ function Copyright(props: any) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-         www.golinkin.com
+        www.golinkin.com
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -82,7 +82,7 @@ const OTPConfirmation: React.FC = () => {
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const savedAccessToken = localStorage.getItem('AccessToken');
       const response = await axios.post(
@@ -97,15 +97,15 @@ const OTPConfirmation: React.FC = () => {
           },
         }
       );
-  
+
       console.log('Response:', response);
-  
+
       if (response.status === 200) {
         localStorage.removeItem('AccessToken');
         localStorage.setItem('AccessToken', response.data.token);
-  
+
         const userRole = response.data.user.role;
-  
+
         switch (userRole) {
           case 'jobseeker':
           case 'freelancer':
@@ -118,7 +118,7 @@ const OTPConfirmation: React.FC = () => {
             toast.error('Unknown user role');
         }
       } else {
-        toast.error(response.data.status.message || 'Failed to verify OTP'); 
+        toast.error(response.data.status.message || 'Failed to verify OTP');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -127,7 +127,7 @@ const OTPConfirmation: React.FC = () => {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <>
@@ -135,40 +135,42 @@ const OTPConfirmation: React.FC = () => {
         <Loading />
       ) : (
         <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <Box
-              sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-            >
-              <nav className="fixed-navbar">
-                <Link href="/">
-                  <img src='https://cdn-icons-png.flaticon.com/512/3772/3772209.png' className="nav--icon" alt="Learn Now Logo" />
-                </Link>
-                <h3 className="nav--logo_text">GoLinkIn</h3>
-              </nav>
-              <Avatar sx={{ m: 1, bgcolor: '#04d9ff' }}>
-                <LockOutlinedIcon />
-              </Avatar>
-              <Box component="form" noValidate sx={{ mt: 1 }}>
+          <CssBaseline />
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <nav className="fixed-navbar">
+              <Link href="/">
+                <img src='https://cdn-icons-png.flaticon.com/512/3772/3772209.png' className="nav--icon" alt="Learn Now Logo" />
+              </Link>
+              <h3 className="nav--logo_text">GoLinkIn</h3>
+            </nav>
+            <Avatar sx={{ m: 1, bgcolor: '#04d9ff' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Box component="form" noValidate sx={{ mt: 1 }}>
               <div className="App">
                 <h2 className="otp_text">OTP Confirmation</h2>
                 <p className="description_text">
-                    Please enter the OTP sent to your registered phone number.  
-                    {timer === 0 ? (
-                      <>
-                        <Typography style={{ textDecoration: 'underline', color: '#04d9ff', fontWeight:700,fontSize:'15px', display: 'inline',
-                          marginLeft: '10px'}}>
-                          Resend OTP?
-                        </Typography>
-                      </>
-                    ) : (
-                             `${timer} seconds`
-                    )}
-                  </p>
+                  Please enter the OTP sent to your registered phone number.
+                  {timer === 0 ? (
+                    <>
+                      <Typography style={{
+                        textDecoration: 'underline', color: '#04d9ff', fontWeight: 700, fontSize: '15px', display: 'inline',
+                        marginLeft: '10px'
+                      }}>
+                        Resend OTP?
+                      </Typography>
+                    </>
+                  ) : (
+                    `${timer} seconds`
+                  )}
+                </p>
                 <div>
                   {Array.from({ length: 6 }, (_, index) => (
                     <StyledOTPInput
@@ -185,18 +187,18 @@ const OTPConfirmation: React.FC = () => {
                   ))}
                   <br />
                   <br />
-                  <Button  data-testid="submit" variant="contained" onClick={handleVerifyOtp} sx={{ minWidth: 200, backgroundColor: '#04d9ff' }}>
+                  <Button data-testid="submit" variant="contained" onClick={handleVerifyOtp} sx={{ minWidth: 200, backgroundColor: '#04d9ff' }}>
                     Verify OTP
                   </Button>
                 </div>
-                
+
               </div>
-              </Box>
-              </Box>
-            <Copyright sx={{ mt: 8, mb: 4 }} />
-            <ToastContainer />
+            </Box>
+          </Box>
+          <Copyright sx={{ mt: 8, mb: 4 }} />
+          <ToastContainer />
         </ThemeProvider>
-        
+
       )}
     </>
   );

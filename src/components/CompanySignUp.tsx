@@ -93,12 +93,12 @@ const CompanySignup = () => {
           phonenumber: '+' + phoneNumber,
         },
       });
-      if(response.data.status.code == 200){
-      toast.success("Account created successfully");
-      console.log('i got response', response);
-      localStorage.setItem('AccessToken', response.data.status.token);
-      navigate('/otp_confirmation');
-      }else{
+      if (response.data.status.code == 200) {
+        toast.success("Account created successfully");
+        console.log('i got response', response);
+        localStorage.setItem('AccessToken', response.data.status.token);
+        navigate('/otp_confirmation');
+      } else {
         toast.error(response.data.status.message)
       }
     } catch (error) {
@@ -137,80 +137,80 @@ const CompanySignup = () => {
               <div className="App">
                 <h1 className="tital_text">Sign up</h1>
                 <form onSubmit={handleSubmit}>
-                      {/* Email */}
-                      <TextField
-                        id="filled-hidden-label-normal"
-                        defaultValue=""
-                        label="Email"
-                        required
-                        variant="outlined"
-                        value={email}
-                        onChange={handleEmailChange}
-                        placeholder="Enter Your Email"
-                        error={emailError}
-                        helperText={emailError ? 'Email is required' : ''}
-                        sx={{ width: '100%' }}
-                      />
-                      <br /><br />
-                      <TextField
-                        id="filled-hidden-label-normal"
-                        type="password"
-                        defaultValue=""
-                        required
-                        label="Password"
-                        variant="outlined"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        placeholder="Enter Your Password"
-                        error={passwordError}
-                        helperText={passwordError ? 'Password is required' : ''}
-                        sx={{ width: '100%' }}
-                      />
+                  {/* Email */}
+                  <TextField
+                    id="filled-hidden-label-normal"
+                    defaultValue=""
+                    label="Email"
+                    required
+                    variant="outlined"
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder="Enter Your Email"
+                    error={emailError}
+                    helperText={emailError ? 'Email is required' : ''}
+                    sx={{ width: '100%' }}
+                  />
                   <br /><br />
-                    {/* Confirm Password */}
-                    <TextField
-                        id="filled-hidden-label-normal"
-                        type="password"
-                        defaultValue=""
-                        required
-                        label="Confirm Password"
-                        variant="outlined"
-                        value={confirmPassword}
-                        onChange={handleConfirmPasswordChange}
-                        placeholder="Enter Your Password"
-                        error={confirmPasswordError}
-                        helperText={confirmPasswordError ? "Password doesn't match" : ''}
-                        sx={{ width: '100%' }}
-                      />
+                  <TextField
+                    id="filled-hidden-label-normal"
+                    type="password"
+                    defaultValue=""
+                    required
+                    label="Password"
+                    variant="outlined"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    placeholder="Enter Your Password"
+                    error={passwordError}
+                    helperText={passwordError ? 'Password is required' : ''}
+                    sx={{ width: '100%' }}
+                  />
                   <br /><br />
-                    <PhoneInput
-                      country={'in'}
-                      value={phoneNumber}
-                      placeholder='Enter Contact Number'
-                      onChange={(value) => setPhoneNumber(value)}
-                      inputStyle={{ width: '100%', backgroundColor: 'black', color: 'darkgray' }}
-                      dropdownStyle={{
-                        backgroundColor: 'black',
-                        color: 'darkgray'
-                      }}
-                      containerStyle={{ backgroundColor: 'black', color: 'darkgray' }}
-                      buttonStyle={{ color: 'darkgray' }}
-                    />
-                    
-                  </form>
-                  <Button
-                    data-testid="submit"
-                    variant="contained"
-                    type="submit"
-                    disabled={!email || !phoneNumber || !password ||!confirmPassword}
-                    onClick={handleSubmit}
-                    sx={{ width: '100%', marginTop:'4%',  backgroundColor: '#04d9ff'  }}
-                  >
-                    Sign Up
-                  </Button>
-                
+                  {/* Confirm Password */}
+                  <TextField
+                    id="filled-hidden-label-normal"
+                    type="password"
+                    defaultValue=""
+                    required
+                    label="Confirm Password"
+                    variant="outlined"
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    placeholder="Enter Your Password"
+                    error={confirmPasswordError}
+                    helperText={confirmPasswordError ? "Password doesn't match" : ''}
+                    sx={{ width: '100%' }}
+                  />
+                  <br /><br />
+                  <PhoneInput
+                    country={'in'}
+                    value={phoneNumber}
+                    placeholder='Enter Contact Number'
+                    onChange={(value) => setPhoneNumber(value)}
+                    inputStyle={{ width: '100%', backgroundColor: 'black', color: 'darkgray' }}
+                    dropdownStyle={{
+                      backgroundColor: 'black',
+                      color: 'darkgray'
+                    }}
+                    containerStyle={{ backgroundColor: 'black', color: 'darkgray' }}
+                    buttonStyle={{ color: 'darkgray' }}
+                  />
+
+                </form>
+                <Button
+                  data-testid="submit"
+                  variant="contained"
+                  type="submit"
+                  disabled={!email || !phoneNumber || !password || !confirmPassword}
+                  onClick={handleSubmit}
+                  sx={{ width: '100%', marginTop: '4%', backgroundColor: '#04d9ff' }}
+                >
+                  Sign Up
+                </Button>
+
                 <Grid item>
-                  <Link href="http://localhost:3001/login" variant="body2" style={{color:'#04d9ff'}}>
+                  <Link href="http://localhost:3001/login" variant="body2" style={{ color: '#04d9ff' }}>
                     {"Already have an account? login"}
                   </Link>
                 </Grid>

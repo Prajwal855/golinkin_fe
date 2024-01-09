@@ -1,5 +1,5 @@
 import React from 'react';
-import '../assets/styles/Home.css'; 
+import '../assets/styles/Home.css';
 
 interface LoadingProps {
   message?: string;

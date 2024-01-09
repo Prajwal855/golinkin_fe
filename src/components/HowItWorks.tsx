@@ -54,7 +54,7 @@ function ProductHowItWorks() {
             opacity: 0.7,
           }}
         />
-        <Typography variant="h4" marked="center" component="h2" sx={{ mb: 14 }}style={{color:'white'}}>
+        <Typography variant="h4" marked="center" component="h2" sx={{ mb: 14 }} style={{ color: 'white' }}>
           How it works
         </Typography>
         <div>
@@ -68,7 +68,7 @@ function ProductHowItWorks() {
                   alt="company"
                   sx={image}
                 />
-                <Typography variant="h5" align="center" style={{color:'white'}}>
+                <Typography variant="h5" align="center" style={{ color: 'white' }}>
                   Post Requirements ,Hire Experts/Freelancer and Schedule Interviews.
                 </Typography>
               </Box>
@@ -82,8 +82,8 @@ function ProductHowItWorks() {
                   alt="expert"
                   sx={image}
                 />
-                <Typography variant="h5" align="center"  style={{color:'white'}}>
-                  Add Skills, Experince, filters Jobs based on his requirement and apply 
+                <Typography variant="h5" align="center" style={{ color: 'white' }}>
+                  Add Skills, Experince, filters Jobs based on his requirement and apply
                 </Typography>
               </Box>
             </Grid>
@@ -96,7 +96,7 @@ function ProductHowItWorks() {
                   alt="freelancer"
                   sx={image}
                 />
-                <Typography variant="h5" align="center"  style={{color:'white'}}>
+                <Typography variant="h5" align="center" style={{ color: 'white' }}>
                   Add Experince in Projects, apply for Projects and Bid
                 </Typography>
               </Box>

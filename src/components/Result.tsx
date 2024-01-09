@@ -103,7 +103,7 @@ const Result: React.FC = () => {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <div  className="dark-theme">
+      <div className="dark-theme">
         <div className="App">
           <nav className="fixed-navbar">
             <Link href="/Home">
@@ -115,13 +115,13 @@ const Result: React.FC = () => {
             </Link>
             <h3 className="nav--logo_text">GoLinkIN</h3>
           </nav>
-          <h1 style={{color:'white'}}>Your Results!</h1>
+          <h1 style={{ color: 'white' }}>Your Results!</h1>
           <div>
-            <Typography variant="h6" style={{color:'white'}}>Score: {userDetails.score}</Typography>
-            <Typography variant="body1" style={{color:'white'}}>
+            <Typography variant="h6" style={{ color: 'white' }}>Score: {userDetails.score}</Typography>
+            <Typography variant="body1" style={{ color: 'white' }}>
               Correct Answers: {userDetails.correct_answers}
             </Typography>
-            <Typography variant="body1" style={{color:'white'}}>
+            <Typography variant="body1" style={{ color: 'white' }}>
               Total Questions: {userDetails.total_questions}
             </Typography>
             <div style={{ marginLeft: '40%' }}>

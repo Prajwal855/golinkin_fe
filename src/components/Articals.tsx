@@ -66,14 +66,14 @@ const Articals = () => {
                     </nav>
                     <div style={{ backgroundColor: 'black', height: '100%', marginTop: '3%' }}>
                         <br /><br /><br />
-                        <Typography variant="h3" gutterBottom style={{color:'#04d9ff', marginLeft:'50px'}}>
-                        Explore Latest Articles
-                    </Typography>
+                        <Typography variant="h3" gutterBottom style={{ color: '#04d9ff', marginLeft: '50px' }}>
+                            Explore Latest Articles
+                        </Typography>
                         <Grid container justifyContent="center" spacing={10}>
                             {articleData.map((item) => (
                                 <Grid key={item.id} item xs={12} md={9} container>
                                     <Grid item xs={12} md={6} onClick={() => handleImageClick(item.url)}>
-                                        <div className='artical-card' style={{  cursor: 'pointer' }}>
+                                        <div className='artical-card' style={{ cursor: 'pointer' }}>
                                             <img
                                                 src={item.urlToImage}
                                                 alt={item.title}
@@ -81,7 +81,7 @@ const Articals = () => {
                                         </div>
                                     </Grid>
                                     <Grid item xs={12} md={6}>
-                                    <Typography variant="h5" style={{ color: '#fff', marginLeft: '-150px', marginRight: '-200px' }}>
+                                        <Typography variant="h5" style={{ color: '#fff', marginLeft: '-150px', marginRight: '-200px' }}>
                                             {item.title}
                                         </Typography>
                                         <br />

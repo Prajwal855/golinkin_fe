@@ -16,27 +16,32 @@ import UserIntro from './components/UserIntro';
 import Articals from './components/Articals';
 import Chat from './components/Chat';
 import CreateJob from './components/CreateJob';
+import People from './components/People';
+import Jobs from './components/Jobs';
+
 
 
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<LandingPage/>}/>
-      <Route path='/signup' element = {<Signup/>}/>
-      <Route path='/login' element={<Login/>}/>
-      <Route path='/otp_confirmation' element={<OTPConfirmation/>}/>
-      <Route path='/profile' element={<Profiles/>}/>
-      <Route path='/Quiz_form' element={<QuizForm/>}/>
-      <Route path='/Quiz' element={<QuizQuestions/>}/>
-      <Route path='/Result' element={<Result/>}/>
-      <Route path='/Home' element={<Home/>}/>
-      <Route path='/terms_and_condition' element={<Termsandcondition/>}/>
-      <Route path='/CompanyProfile' element={<Company/>}/>
-      <Route path='/CompanySignUp' element={<CompanySignup/>}/>
-      <Route path='/Intro' element={<UserIntro/>}/>
-      <Route path='/Articales' element={<Articals/>}/>
-      <Route path='/Chat' element={<Chat/>}/>
-      <Route path='/CreateJobs' element={<CreateJob/>}/>
+      <Route path='/' element={<LandingPage />} />
+      <Route path='/signup' element={<Signup />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/otp_confirmation' element={<OTPConfirmation />} />
+      <Route path='/profile' element={<Profiles />} />
+      <Route path='/Quiz_form' element={<QuizForm />} />
+      <Route path='/Quiz' element={<QuizQuestions />} />
+      <Route path='/Result' element={<Result />} />
+      <Route path='/Home' element={<Home />} />
+      <Route path='/terms_and_condition' element={<Termsandcondition />} />
+      <Route path='/CompanyProfile' element={<Company />} />
+      <Route path='/CompanySignUp' element={<CompanySignup />} />
+      <Route path='/Intro' element={<UserIntro />} />
+      <Route path='/Articales' element={<Articals />} />
+      <Route path='/Chat' element={<Chat />} />
+      <Route path='/CreateJobs' element={<CreateJob />} />
+      <Route path='/People' element={<People />} />
+      <Route path='/Jobs' element={<Jobs />} />
     </Routes>
   );
 }

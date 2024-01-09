@@ -30,7 +30,7 @@ function Copyright(props: any) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="http://localhost:3001/terms_and_condition">
-         www.golinkin.com
+        www.golinkin.com
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -128,12 +128,12 @@ const Signup = () => {
           phonenumber: '+' + phoneNumber,
         },
       });
-      if(response.data.status.code == 200){
-      toast.success("Account created successfully");
-      console.log('i got response', response);
-      localStorage.setItem('AccessToken', response.data.status.token);
-      navigate('/otp_confirmation');
-      }else{
+      if (response.data.status.code == 200) {
+        toast.success("Account created successfully");
+        console.log('i got response', response);
+        localStorage.setItem('AccessToken', response.data.status.token);
+        navigate('/otp_confirmation');
+      } else {
         toast.error(response.data.status.message)
       }
     } catch (error) {
@@ -245,18 +245,18 @@ const Signup = () => {
                   <br />
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                    <PhoneInput
-                      country={'in'}
-                      value={phoneNumber}
-                      onChange={(value) => setPhoneNumber(value)}
-                      inputStyle={{ width: '100%', backgroundColor: 'black', color: 'darkgray' }}
-                      dropdownStyle={{
-                        backgroundColor: 'black',
-                        color: 'darkgray'
-                      }}
-                      containerStyle={{ backgroundColor: 'black', color: 'darkgray' }}
-                      buttonStyle={{ color: 'darkgray' }}
-                    />
+                      <PhoneInput
+                        country={'in'}
+                        value={phoneNumber}
+                        onChange={(value) => setPhoneNumber(value)}
+                        inputStyle={{ width: '100%', backgroundColor: 'black', color: 'darkgray' }}
+                        dropdownStyle={{
+                          backgroundColor: 'black',
+                          color: 'darkgray'
+                        }}
+                        containerStyle={{ backgroundColor: 'black', color: 'darkgray' }}
+                        buttonStyle={{ color: 'darkgray' }}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       {/* Confirm Password */}
@@ -277,10 +277,10 @@ const Signup = () => {
                     </Grid>
                   </Grid>
                   <br />
-                  <Grid container spacing={2}> 
+                  <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
                       {/* Gender */}
-                      <FormControl sx={{  minWidth: 200, width: '100%' }} size="medium">
+                      <FormControl sx={{ minWidth: 200, width: '100%' }} size="medium">
                         <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                         <Select
                           labelId="demo-simple-select-label"
@@ -320,15 +320,15 @@ const Signup = () => {
                     data-testid="submit"
                     variant="contained"
                     type="submit"
-                    disabled={!firstname || !email || !phoneNumber || !role || !password ||!lastname ||!confirmPassword}
+                    disabled={!firstname || !email || !phoneNumber || !role || !password || !lastname || !confirmPassword}
                     onClick={handleSubmit}
-                    sx={{ width: '100%', marginTop:'4%',  backgroundColor: '#04d9ff'  }}
+                    sx={{ width: '100%', marginTop: '4%', backgroundColor: '#04d9ff' }}
                   >
                     Sign Up
                   </Button>
                 </form>
                 <Grid item>
-                  <Link href="http://localhost:3001/login" variant="body2" style={{color:'#04d9ff'}}>
+                  <Link href="http://localhost:3001/login" variant="body2" style={{ color: '#04d9ff' }}>
                     {"Already have an account? login"}
                   </Link>
                 </Grid>

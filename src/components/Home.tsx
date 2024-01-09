@@ -1,4 +1,13 @@
 import { Box, CssBaseline, InputBase, Paper, Stack, TextareaAutosize, ThemeProvider, Tooltip, Typography, alpha, colors, createTheme, styled } from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CommentIcon from '@mui/icons-material/Comment';
+import ShareIcon from '@mui/icons-material/Share';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ChangeEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -95,9 +104,10 @@ const Home = () => {
   const [post, setPost] = useState<string>('');
   const [visiblePeople, setVisiblePeople] = useState(3);
   const [visibleCompanies, setVisibleCompanies] = useState(3);
+  const [isLiked, setIsLiked] = useState(false);
 
-  const handleViewMorePeople = () => {
-    setVisiblePeople((prevVisiblePeople) => prevVisiblePeople + 3);
+  const handleLikeClick = () => {
+    setIsLiked((prevIsLiked) => !prevIsLiked);
   };
 
   const handleViewMoreCompanies = () => {
@@ -147,23 +157,34 @@ const Home = () => {
   };
 
   const handleCreateJobsClick = () => {
+    setLoading(true);
     navigate('/CreateJobs');
+  };
+
+  const handlePeopleClick = () => {
+    setLoading(true);
+    navigate('/People');
   };
 
   const handleArticalsClick = async () => {
     setLoading(true);
     navigate('/Articales');
   };
+  const handleJobsClick = async () => {
+    setLoading(true);
+    navigate('/Jobs');
+  };
   const [userRole, setUserRole] = useState('');
 
   const fetchUserRole = async () => {
+    setLoading(true);
     try {
       const savedAccessToken = localStorage.getItem('AccessToken');
       if (!savedAccessToken) {
         throw new Error('Access token not found');
       }
 
-      const response = await axios.get('http://localhost:3000/user', {
+      const response = await axios.get('http://localhost:3000/specific_account', {
         headers: {
           token: savedAccessToken,
         },
@@ -177,9 +198,13 @@ const Home = () => {
       console.error(error);
       toast.error('Error fetching user role');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   const fetchJobs = async () => {
+    setLoading(true);
     try {
       const savedAccessToken = localStorage.getItem("AccessToken");
       const jobsResponse = await axios.get('http://localhost:3000/jobs', {
@@ -190,10 +215,13 @@ const Home = () => {
       setJobProfiles(jobsResponse.data.job_profiles[0]);
     } catch (error) {
       toast.error("Unable to fetch job details");
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchUsers = async () => {
+    setLoading(true);
     try {
       const savedAccessToken = localStorage.getItem("AccessToken");
       const usersResponse = await axios.get('http://localhost:3000/users', {
@@ -205,10 +233,13 @@ const Home = () => {
       setUserProfiles(usersResponse.data.users);
     } catch (error) {
       toast.error("Unable to fetch job details");
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchBlogs = async () => {
+    setLoading(true);
     try {
       const savedAccessToken = localStorage.getItem("AccessToken");
       const blogsResponse = await axios.get('http://localhost:3000/blogs', {
@@ -220,10 +251,13 @@ const Home = () => {
       setPostDetails(blogsResponse.data.blogs);
     } catch (error) {
       toast.error("Unable to fetch Companies details");
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchCompanies = async () => {
+    setLoading(true);
     try {
       const savedAccessToken = localStorage.getItem("AccessToken");
       const companiesResponse = await axios.get('http://localhost:3000/companies', {
@@ -235,17 +269,13 @@ const Home = () => {
       setCompanyProfiles(companiesResponse.data.companies[0].data);
     } catch (error) {
       toast.error("Unable to fetch Companies details");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const getProfilePhotoUrl = (): string => {
-    if (userProfiles && typeof userProfiles === 'object' && 'photo' in userProfiles) {
-      const photoUrl: string | undefined = userProfiles.photo as string | undefined;
-      if (photoUrl && typeof photoUrl === 'string') {
-        return photoUrl;
-      }
-    }
-    return 'https://clipart-library.com/new_gallery/280-2806732_png-file-svg-default-profile-picture-png.png';
+  const getProfilePhotoUrl = (user: any): string => {
+    return user?.photo || 'https://clipart-library.com/new_gallery/280-2806732_png-file-svg-default-profile-picture-png.png';
   };
 
   const getCompanyProfilePhotoUrl = (company: any): string => {
@@ -266,7 +296,6 @@ const Home = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       const savedAccessToken = localStorage.getItem("AccessToken");
       const formData = new FormData();
@@ -322,6 +351,7 @@ const Home = () => {
                         src="https://cdn-icons-png.flaticon.com/512/3850/3850285.png"
                         className="nav--icon"
                         alt="Jobs Logo"
+                        onClick={handleJobsClick}
                       />
                     </Tooltip>
                     <Link
@@ -349,6 +379,7 @@ const Home = () => {
                         src="https://www.shutterstock.com/shutterstock/videos/1068904214/thumb/8.jpg?ip=x480"
                         className="nav--icon"
                         alt="People Logo"
+                        onClick={handlePeopleClick}
                       />
                     </Tooltip>
                     <Tooltip title="Create Job" arrow>
@@ -393,7 +424,7 @@ const Home = () => {
               />
             </Tooltip>
             {jobProfiles.length > 0 && (
-              <div style={{ position: 'absolute', right: '5px', marginRight: '10px', marginTop:'5%' }}>
+              <div style={{ position: 'absolute', right: '5px', marginRight: '10px', marginTop: '5%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
                     Opennings
@@ -410,14 +441,19 @@ const Home = () => {
                         Experience: {job.experience}
                       </Typography>
                       <Typography variant="body2">Salary: ${job.salary}</Typography>
-                      <Typography variant="body2" style={{ color: 'gray' }}>{new Date().toDateString()}</Typography>
+                      <Typography variant="body2" style={{ color: 'gray' }}>{timeAgo(job.created_at)}</Typography>
+                    </div>
+                    <div style={{ marginLeft: 'auto' }}>
+                      <Tooltip title="Apply Job" arrow>
+                        <AddCircleOutlineIcon style={{ cursor: 'pointer', color: '#04d9ff' }} />
+                      </Tooltip>
                     </div>
                   </Paper>
                 ))}
               </div>
             )}
             {userProfiles.length > 0 && (
-              <div style={{ position: 'absolute', left: '5px', marginLeft: '10px', marginTop:'5%' }}>
+              <div style={{ position: 'absolute', left: '5px', marginLeft: '10px', marginTop: '5%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
                     Peoples
@@ -427,7 +463,7 @@ const Home = () => {
                   <Paper key={user.id} sx={{ padding: 2, marginTop: '10px', display: 'flex', alignItems: 'center', minWidth: 300 }}>
                     <div style={{ marginRight: '10px' }}>
                       <img
-                        src={getProfilePhotoUrl()}
+                        src={getProfilePhotoUrl(user)}
                         alt="profile"
                         style={{
                           width: '70px',
@@ -439,13 +475,18 @@ const Home = () => {
                     </div>
                     <div style={{ textAlign: 'left' }}>
                       <Typography variant="h6" style={{ color: '#04d9ff' }}>{user.first_name}  {user.last_name}</Typography>
-                      <Typography variant="body1" style={{ color: 'grey' }}>{user.experience}</Typography>
+                      <Typography variant="body1" style={{ color: 'grey' }}>{user.skill}</Typography>
+                    </div>
+                    <div style={{ marginLeft: 'auto' }}>
+                      <Tooltip title="Friend Request" arrow>
+                        <PersonAddIcon style={{ cursor: 'pointer', color: '#04d9ff' }} />
+                      </Tooltip>
                     </div>
                   </Paper>
                 ))}
                 {userProfiles.length > visiblePeople && (
                   <Button
-                    variant="text" onClick={handleViewMorePeople} style={{ color: '#04d9ff'}}>View more</Button>
+                    variant="text" onClick={handlePeopleClick} style={{ color: '#04d9ff' }}>View more</Button>
                 )}
               </div>
             )}
@@ -476,15 +517,20 @@ const Home = () => {
                       <Typography variant="body1" style={{ color: 'grey' }}>{company.attributes.company_type}</Typography>
                       <Typography variant="body1" style={{ color: 'grey' }}>{company.attributes.headquarters}</Typography>
                     </div>
+                    <div style={{ marginLeft: 'auto' }}>
+                      <Tooltip title="Follow" arrow>
+                        <GroupAddIcon style={{ cursor: 'pointer', color: '#04d9ff' }} />
+                      </Tooltip>
+                    </div>
                   </Paper>
                 ))}
                 {companyProfiles.length > visibleCompanies && (
                   <Button
-                    variant="text" onClick={handleViewMoreCompanies} style={{ color: '#04d9ff'}}>View more</Button>
+                    variant="text" onClick={handleViewMoreCompanies} style={{ color: '#04d9ff' }}>View more</Button>
                 )}
               </div>
             )}
-            <div style={{ position: 'absolute', left: '25%', marginTop:'5%' }}>
+            <div style={{ position: 'absolute', left: '25%', marginTop: '5%' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
                   What do you want to talk about?
@@ -519,8 +565,8 @@ const Home = () => {
                     </Typography>
                   </Box>
                   {postDetails.map((blog: any) => (
-                    <Paper key={blog.id} sx={{ padding: 2, marginTop: '5px', display: 'flex', alignItems: 'center', minWidth: 570, marginBottom: '5px' }}>
-                      <div style={{ marginRight: '5px' }}>
+                    <Paper key={blog.id} sx={{ padding: 2, marginTop: '5px', display: 'flex', alignItems: 'center', maxWidth: 570, marginBottom: '5px' }}>
+                      <div style={{ marginRight: '15px' }}>
                         <img
                           src={getUserProfilePhotoUrl(blog)}
                           alt="company profile"
@@ -536,6 +582,26 @@ const Home = () => {
                         <Typography variant="h6" style={{ color: '#04d9ff' }}>{blog.user.first_name} {blog.user.last_name}</Typography>
                         <Typography variant="body2" style={{ color: 'gray' }}>{timeAgo(blog.created_at)}</Typography>
                         <Typography variant="body1" style={{ color: '#fff', marginTop: '10px' }}>{blog.post}</Typography>
+
+                        <div style={{ display: 'flex', marginTop: '5px' }}>
+                          <Tooltip title="Like" arrow>
+                            <span onClick={handleLikeClick} style={{ cursor: 'pointer', marginRight: '10px' }}>
+                              {isLiked ? <FavoriteIcon style={{ color: '#E1306C' }} /> : <FavoriteBorderIcon />}
+                            </span>
+                          </Tooltip>
+                          <Tooltip title="Comment" arrow>
+                            <CommentIcon style={{ marginRight: '10px', color: '#04d9ff', marginLeft: '3px' }} />
+                          </Tooltip>
+                          <Tooltip title="Share" arrow>
+                            <ShareIcon style={{ cursor: 'pointer', color: '#04d9ff', marginLeft: '3px' }} />
+                          </Tooltip>
+                        </div>
+                      </div>
+
+                      <div style={{ marginLeft: 'auto' }}>
+                        <Tooltip title="Add To Favorite" arrow>
+                          <BookmarkIcon style={{ cursor: 'pointer', color: '#04d9ff' }} />
+                        </Tooltip>
                       </div>
                     </Paper>
                   ))}

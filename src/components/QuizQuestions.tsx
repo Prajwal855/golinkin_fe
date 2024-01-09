@@ -96,76 +96,76 @@ const QuizQuestions = () => {
   };
 
   return (
-    <div className="dark-theme" style={{marginTop:'-10px', marginBottom: '-50px'}}>
-    <ThemeProvider theme={darkTheme}>
-      <div  style={{ position: 'relative' }}>
-        <nav className="fixed-navbar">
-          <Link to="/Home">
-            <img src='https://cdn-icons-png.flaticon.com/512/3772/3772209.png' className="nav--icon" alt="Learn Now Logo" />
-          </Link>
-          <h3 className="nav--logo_text">GoLinkIN</h3>
-          <div style={{ marginTop: '1%', textAlign: 'right', color:'#04d9ff' }}>
-            {`Time Remaining: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`}
-          </div>
-        </nav>
-        <div >
-          <div style={{ display: 'flex', marginTop: '4%' }}>
-            <div className="sidebar" style={{marginTop: '1%'}}>
-              {questions.map((_, index) => (
-                <div
-                  key={index}
-                  className={`sidebar-item ${index === currentQuestionIndex ? 'active' : ''} ${userAnswers[questions[index].id] ? 'answered' : ''}`}
-                  onClick={() => {
-                    setCurrentQuestionIndex(index);
-                    scrollToQuestion();
-                  }}
-                  style={{color:'white'}}
-                >
-                  {index + 1}
-                </div>
-              ))}
+    <div className="dark-theme" style={{ marginTop: '-10px', marginBottom: '-50px' }}>
+      <ThemeProvider theme={darkTheme}>
+        <div style={{ position: 'relative' }}>
+          <nav className="fixed-navbar">
+            <Link to="/Home">
+              <img src='https://cdn-icons-png.flaticon.com/512/3772/3772209.png' className="nav--icon" alt="Learn Now Logo" />
+            </Link>
+            <h3 className="nav--logo_text">GoLinkIN</h3>
+            <div style={{ marginTop: '1%', textAlign: 'right', color: '#04d9ff' }}>
+              {`Time Remaining: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`}
             </div>
-            <div
-              ref={questionContainerRef}
-              style={{ marginTop: '5%', marginLeft: '5%', minHeight: '400px', display: 'flex', flexDirection: 'column' }}
-            >
-              <FormControl>
-                <FormLabel>
-                  <Typography style={{ color: 'white', fontWeight: 700, fontSize: '20px' }}>{`Question ${currentQuestionIndex + 1}: ${currentQuestion.que}`}</Typography>
-                </FormLabel>
-                <RadioGroup name={`question-${questionId}`} value={userAnswer}>
-                  {currentQuestion.choices?.map((choice: any, index: any) => (
-                    <FormControlLabel style={{ marginLeft: '12%', fontSize: '15px',color: 'white' }}
-                      key={choice.id}
-                      value={choice.id.toString()}
-                      control={<Radio data-testid={`mcq-${index}`} />}
-                      label={choice.option}
-                      onChange={(e) => handleChange(e)}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormControl>
-              <div style={{ position: 'absolute', bottom: '10px', left: 70, right: 10, display: 'flex', justifyContent: 'space-between', padding: '10px' }}>
-                {currentQuestionIndex > 0 && (
-                  <Button variant="contained" color="primary" onClick={handlePreviousQuestion}>
-                    Previous
-                  </Button>
-                )}
-                {currentQuestionIndex < questions.length - 1 ? (
-                  <Button variant="contained" color="primary" onClick={handleNextQuestion}>
-                    Next
-                  </Button>
-                ) : (
-                  <Button variant="contained" color="primary" onClick={handleFinishQuiz}>
-                    Finish Quiz
-                  </Button>
-                )}
+          </nav>
+          <div >
+            <div style={{ display: 'flex', marginTop: '4%' }}>
+              <div className="sidebar" style={{ marginTop: '1%' }}>
+                {questions.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`sidebar-item ${index === currentQuestionIndex ? 'active' : ''} ${userAnswers[questions[index].id] ? 'answered' : ''}`}
+                    onClick={() => {
+                      setCurrentQuestionIndex(index);
+                      scrollToQuestion();
+                    }}
+                    style={{ color: 'white' }}
+                  >
+                    {index + 1}
+                  </div>
+                ))}
+              </div>
+              <div
+                ref={questionContainerRef}
+                style={{ marginTop: '5%', marginLeft: '5%', minHeight: '400px', display: 'flex', flexDirection: 'column' }}
+              >
+                <FormControl>
+                  <FormLabel>
+                    <Typography style={{ color: 'white', fontWeight: 700, fontSize: '20px' }}>{`Question ${currentQuestionIndex + 1}: ${currentQuestion.que}`}</Typography>
+                  </FormLabel>
+                  <RadioGroup name={`question-${questionId}`} value={userAnswer}>
+                    {currentQuestion.choices?.map((choice: any, index: any) => (
+                      <FormControlLabel style={{ marginLeft: '12%', fontSize: '15px', color: 'white' }}
+                        key={choice.id}
+                        value={choice.id.toString()}
+                        control={<Radio data-testid={`mcq-${index}`} />}
+                        label={choice.option}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+                <div style={{ position: 'absolute', bottom: '10px', left: 70, right: 10, display: 'flex', justifyContent: 'space-between', padding: '10px' }}>
+                  {currentQuestionIndex > 0 && (
+                    <Button variant="contained" color="primary" onClick={handlePreviousQuestion}>
+                      Previous
+                    </Button>
+                  )}
+                  {currentQuestionIndex < questions.length - 1 ? (
+                    <Button variant="contained" color="primary" onClick={handleNextQuestion}>
+                      Next
+                    </Button>
+                  ) : (
+                    <Button variant="contained" color="primary" onClick={handleFinishQuiz}>
+                      Finish Quiz
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </ThemeProvider>
+      </ThemeProvider>
     </div>
   );
 };

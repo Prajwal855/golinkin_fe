@@ -154,7 +154,7 @@ const Companies = () => {
             !size ||
             !website ||
             !founded ||
-            !headquarters 
+            !headquarters
         );
     };
 
@@ -335,7 +335,7 @@ const Companies = () => {
                             <Grid item xs={12}>
                                 <div>
                                     <Button
-                                        
+
                                         variant="contained"
                                         type="submit"
                                         onClick={handleSubmit}

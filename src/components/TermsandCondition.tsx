@@ -29,20 +29,20 @@ const Termsandcondition = () => {
 
     const fetchtermsandcondition = async () => {
         try {
-          const response = await axios.get('http://localhost:3000/termsandconditions/1');
-          const termsandcondition = response.data.termsandcondition.name;
-          console.log('i got response for terms and condition', response);
-          console.log('i got the terms and condition', termsandcondition);
-          setTermsandcondition(termsandcondition);
+            const response = await axios.get('http://localhost:3000/termsandconditions/1');
+            const termsandcondition = response.data.termsandcondition.name;
+            console.log('i got response for terms and condition', response);
+            console.log('i got the terms and condition', termsandcondition);
+            setTermsandcondition(termsandcondition);
         } catch (error) {
-          console.error(error);
-          toast.error('Error fetching user role');
+            console.error(error);
+            toast.error('Error fetching user role');
         }
-      };
-    
+    };
+
     useEffect(() => {
         fetchtermsandcondition();
-      }, []);
+    }, []);
 
 
     return (
@@ -63,21 +63,21 @@ const Termsandcondition = () => {
                     <h3 className="nav--logo_text">GoLinkIn</h3>
                 </nav>
             </Box>
-            <Box sx={{ marginLeft:7, marginTop: 10, maxWidth: 1200 }}>
-                    <Typography variant="h3" gutterBottom>
-                        Terms and Conditions
-                    </Typography>
-                    <Typography variant="body1" sx={{marginLeft:7,marginTop: 8}}>
-                        {termsandcondition}
-                    </Typography>
-                </Box>
-                <Button
-                        variant="text"
-                        onClick={handleSBack}
-                        sx={{ position: 'absolute', top: '70px', right: '10px', color:'#04d9ff' }}
-                    >
-                        Back
-                    </Button>
+            <Box sx={{ marginLeft: 7, marginTop: 10, maxWidth: 1200 }}>
+                <Typography variant="h3" gutterBottom>
+                    Terms and Conditions
+                </Typography>
+                <Typography variant="body1" sx={{ marginLeft: 7, marginTop: 8 }}>
+                    {termsandcondition}
+                </Typography>
+            </Box>
+            <Button
+                variant="text"
+                onClick={handleSBack}
+                sx={{ position: 'absolute', top: '70px', right: '10px', color: '#04d9ff' }}
+            >
+                Back
+            </Button>
         </ThemeProvider >
     );
 };
