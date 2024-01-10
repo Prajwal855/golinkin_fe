@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
 import Button from './Button';
+import ReactPlayer from 'react-player';
 
 const paperStyle = {
     padding: 2,
@@ -14,7 +15,7 @@ const paperStyle = {
     flexDirection: 'column',
     alignItems: 'center',
     maxWidth: 500,
-    marginLeft: '60%',
+    marginLeft: '50%',
 };
 
 const columnStyle = {
@@ -33,7 +34,7 @@ const IndividualProfile: React.FC<{ user: any }> = ({ user }) => (
         </Typography>
         <Paper sx={paperStyle}>
             <div style={columnStyle}>
-                <Typography variant="h3" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff' }}>
+                <Typography variant="h3" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10%' }}>
                     Profile
                 </Typography>
                 <img
@@ -98,6 +99,7 @@ const timeAgo = (timestamp: string) => {
 const Peoples = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
     const [userProfiles, setUserProfiles] = useState<any[]>([]);
     const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
@@ -110,6 +112,14 @@ const Peoples = () => {
         } catch (error) {
             toast.error("Unable to fetch job details");
         }
+    };
+
+    const videos = [
+        'https://www.youtube.com/watch?v=AscYjsBh430',
+    ];
+
+    const handleVideoEnd = () => {
+        setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
     };
 
 
@@ -152,14 +162,14 @@ const Peoples = () => {
                             <h3 className="nav--logo_text">GoLinkIN</h3>
                         </nav>
                         {userProfiles.length > 0 && (
-                            <div style={{ position: 'absolute', left: 200, marginTop: '5%' }}>
+                            <div style={{ position: 'absolute', left: 100, marginTop: '5%' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Typography variant="h3" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
                                         Peoples
                                     </Typography>
                                 </Box>
                                 {userProfiles.map((user: any) => (
-                                    <Paper key={user.id} sx={{ padding: 2, marginTop: '10px', display: 'flex', alignItems: 'center', minWidth: 500, marginLeft: '20px' }}>
+                                    <Paper key={user.id} sx={{ padding: 2, marginTop: '10px', display: 'flex', alignItems: 'center', minWidth: 500, marginLeft: '10px' }}>
                                         <div style={{ marginRight: '10px' }}>
                                             <img
                                                 src={getProfilePhotoUrl(user)}
@@ -178,7 +188,16 @@ const Peoples = () => {
                                             <Button
                                                 type="text"
                                                 onClick={() => fetchIndivialUser(user.id)}
-                                                sx={{ top: '-80px', right: '-200px', color: '#04d9ff', maxHeight: 20, width: 150 }}
+                                                sx={{
+                                                    top: '-80px',
+                                                    right: '-200px',
+                                                    color: '#04d9ff',
+                                                    maxHeight: 20,
+                                                    width: 150,
+                                                    '&:hover': {
+                                                        backgroundColor: 'transparent',
+                                                    },
+                                                }}
                                             >
                                                 View Info
                                             </Button>
@@ -192,6 +211,15 @@ const Peoples = () => {
                         )}
                         <div style={{ marginLeft: '20px' }}>
                             {selectedUser && <IndividualProfile user={selectedUser} />}
+                        </div>
+                        <div style={{ height: '50%', width: '50%', top: '90%', right: '5%', position: 'absolute' }}>
+                            <ReactPlayer
+                                url={videos[currentVideoIndex]}
+                                playing
+                                width="100%"
+                                height="100%"
+                                onEnded={handleVideoEnd}
+                            />
                         </div>
 
                     </div>

@@ -150,10 +150,16 @@ const Result: React.FC = () => {
               />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '40px', marginLeft: '40%', marginRight: '40%' }}>
-              <Button color='secondary' variant="contained" onClick={handleExit}>
+              <Button color='secondary' variant="contained" onClick={handleExit} sx={{ backgroundColor: '#04d9ff' ,
+                    '&:hover': {
+                        backgroundColor: '#70e9ff',
+                    }  }}>
                 Exit Quiz
               </Button>
-              <Button color='secondary' variant="contained" onClick={handleShowAnswers}>
+              <Button color='secondary' variant="contained" onClick={handleShowAnswers} sx={{ backgroundColor: '#04d9ff' ,
+                    '&:hover': {
+                        backgroundColor: '#70e9ff',
+                    }  }}>
                 Show Answers
               </Button>
             </div>

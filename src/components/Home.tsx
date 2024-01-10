@@ -1,4 +1,4 @@
-import { Box, CssBaseline, InputBase, Paper, Stack, TextareaAutosize, ThemeProvider, Tooltip, Typography, alpha, colors, createTheme, styled } from '@mui/material';
+import { Box, CssBaseline, InputBase, Modal, Paper, Stack, TextareaAutosize, ThemeProvider, Tooltip, Typography, alpha, colors, createTheme, styled } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -7,7 +7,6 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ChangeEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -15,8 +14,12 @@ import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
 import Link from '@mui/material/Link';
 import SearchIcon from '@mui/icons-material/Search';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ReactPlayer from 'react-player';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import GroupIcon from '@mui/icons-material/Group';
 import Button from './Button';
 
 
@@ -83,8 +86,15 @@ const timeAgo = (timestamp: string) => {
   const seconds = Math.floor(timeDifference / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
 
-  if (hours > 0) {
+  if (days > 0) {
+    if (days === 1) {
+      return '1 day ago';
+    } else {
+      return `${days} days ago`;
+    }
+  } else if (hours > 0) {
     return `${hours}hr ago`;
   } else if (minutes > 0) {
     return `${minutes}min ago`;
@@ -92,6 +102,37 @@ const timeAgo = (timestamp: string) => {
     return 'Just now';
   }
 };
+
+
+interface JobDetails {
+  id: number;
+  name: string;
+  company_type: string;
+  headquarters: string;
+  position: string;
+  experience: string;
+  salary: number;
+  skills_required: string;
+  small_description: string;
+  size: string;
+  website: string;
+  founded: string;
+  specialities: string;
+  photo: string;
+}
+
+interface Likes {
+  [postId: string]: boolean;
+}
+
+interface Bookmarks {
+  [postId: string]: boolean;
+}
+
+interface Jobs {
+  [JobId: string]: boolean;
+}
+
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
@@ -102,12 +143,60 @@ const Home = () => {
   const [companyProfiles, setCompanyProfiles] = useState<any[]>([]);
   const [postDetails, setPostDetails] = useState<any[]>([]);
   const [post, setPost] = useState<string>('');
-  const [visiblePeople, setVisiblePeople] = useState(3);
   const [visibleCompanies, setVisibleCompanies] = useState(3);
-  const [isLiked, setIsLiked] = useState(false);
+  const [likes, setLikes] = useState<Likes>({});
+  const [bookmarks, setBookmarks] = useState<Bookmarks>({});
+  const [jobDetails, setJobDetails] = useState<JobDetails | null>(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [showCheckIcon, setShowCheckIcon] = useState(false);
+  const [jobCheckStatus, setJobCheckStatus] = useState<Jobs>({});
+  const [visiblePeople, setVisiblePeople] = useState(3);
+  const [friendRequests, setFriendRequests] = useState<number[]>([]);
 
-  const handleLikeClick = () => {
-    setIsLiked((prevIsLiked) => !prevIsLiked);
+  const handlePersonAddClick = (userId: number) => {
+    setFriendRequests((prevRequests) => {
+      if (prevRequests.includes(userId)) {
+        return prevRequests.filter((id) => id !== userId);
+      } else {
+
+        return [...prevRequests, userId];
+      }
+    });
+  };
+
+  const handleIconClick = (jobId: number) => {
+    setJobCheckStatus((prevStatus) => ({
+      ...prevStatus,
+      [jobId]: !prevStatus[jobId],
+    }));
+  };
+
+  const handleBookmarkClick = (postId: string) => {
+    setBookmarks((prevBookmarks) => ({ ...prevBookmarks, [postId]: !prevBookmarks[postId] }));
+  };
+
+  const handleBusinessClick = async (jobId: any) => {
+    try {
+      const savedAccessToken = localStorage.getItem('AccessToken');
+      const response = await axios.get(`http://localhost:3000/jobs/${jobId}`, {
+        headers: {
+          token: savedAccessToken,
+        },
+      });
+      setJobDetails(response.data);
+      console.log('I got the job responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', response.data)
+      setOpenModal(true);
+    } catch (error) {
+      console.error('Error fetching job details', error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleLikeClick = (postId: string) => {
+    setLikes((prevLikes) => ({ ...prevLikes, [postId]: !prevLikes[postId] }));
   };
 
   const handleViewMoreCompanies = () => {
@@ -120,16 +209,6 @@ const Home = () => {
 
   const videos = [
     'https://www.youtube.com/watch?v=AscYjsBh430',
-    'https://www.youtube.com/watch?v=Way9Dexny3w&t=61s',
-    'https://www.youtube.com/watch?v=_YUzQa_1RCE&t=8s',
-    'https://www.youtube.com/watch?v=U2Qp5pL3ovA',
-    'https://www.youtube.com/watch?v=gCcx85zbxz4&t=36s',
-    'https://www.youtube.com/watch?v=dZOaI_Fn5o4&t=10s',
-    'https://www.youtube.com/watch?v=dL2kMkVafX0',
-    'https://www.youtube.com/watch?v=FQFHDOP53GE',
-    'https://www.youtube.com/watch?v=k_9tDtXYLq8',
-    'https://www.youtube.com/watch?v=wL8DVHuWI7Y',
-    'https://www.youtube.com/watch?v=YIhQoT4ZlPo',
   ];
 
   const handleVideoEnd = () => {
@@ -282,6 +361,10 @@ const Home = () => {
     return company?.attributes?.photo || 'https://clipart-library.com/new_gallery/280-2806732_png-file-svg-default-profile-picture-png.png';
   };
 
+  const getJobCompanyProfilePhotoUrl = (job: any): string => {
+    return job?.photo || 'https://clipart-library.com/new_gallery/280-2806732_png-file-svg-default-profile-picture-png.png';
+  };
+
   const getUserProfilePhotoUrl = (blog: any): string => {
     return blog?.user?.photo || 'https://clipart-library.com/new_gallery/280-2806732_png-file-svg-default-profile-picture-png.png';
   };
@@ -336,19 +419,27 @@ const Home = () => {
                   </SearchIconWrapper>
                   <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} style={{ color: 'white' }} />
                 </Search>
-                {userRole === 'jobseeker' || userRole === 'freelancer' ? (
-                  <>
-                    <Tooltip title="Articles" arrow>
+                <Tooltip title="Articles" arrow>
                       <img
-                        src="https://cdn-icons-png.flaticon.com/512/1055/1055682.png"
+                        src="https://cdn.freebiesupply.com/logos/large/2x/the-daily-news-logo-png-transparent.png"
                         className="nav--icon"
                         alt="Article Logo"
                         onClick={handleArticalsClick}
                       />
                     </Tooltip>
+                    <Tooltip title="People" arrow>
+                      <img
+                        src="https://www.shutterstock.com/shutterstock/videos/1068904214/thumb/8.jpg?ip=x480"
+                        className="nav--icon"
+                        alt="People Logo"
+                        onClick={handlePeopleClick}
+                      />
+                    </Tooltip>
+                {userRole === 'jobseeker' || userRole === 'freelancer' ? (
+                  <>
                     <Tooltip title="Jobs" arrow>
                       <img
-                        src="https://cdn-icons-png.flaticon.com/512/3850/3850285.png"
+                        src="https://static.vecteezy.com/system/resources/previews/008/878/596/non_2x/job-vacancy-concept-with-we-are-hiring-text-design-orange-and-white-color-job-vacancy-social-media-post-design-we-are-hiring-a-banner-design-with-an-orange-shade-free-png.png"
                         className="nav--icon"
                         alt="Jobs Logo"
                         onClick={handleJobsClick}
@@ -366,27 +457,11 @@ const Home = () => {
                   </>
                 ) : userRole === 'company' ? (
                   <>
-                    <Tooltip title="Articles" arrow>
-                      <img
-                        src="https://cdn-icons-png.flaticon.com/512/1055/1055682.png"
-                        className="nav--icon"
-                        alt="Article Logo"
-                        onClick={handleArticalsClick}
-                      />
-                    </Tooltip>
-                    <Tooltip title="People" arrow>
-                      <img
-                        src="https://www.shutterstock.com/shutterstock/videos/1068904214/thumb/8.jpg?ip=x480"
-                        className="nav--icon"
-                        alt="People Logo"
-                        onClick={handlePeopleClick}
-                      />
-                    </Tooltip>
                     <Tooltip title="Create Job" arrow>
                       <img
-                        src="https://cdn-icons-png.flaticon.com/512/3850/3850285.png"
+                        src="https://cdn.textstudio.com/output/sample/normal/6/0/4/5/hire-logo-275-15406.png"
                         className="nav--icon"
-                        alt="Jobs Logo"
+                        alt="Create Jobs"
                         onClick={handleCreateJobsClick}
                       />
                     </Tooltip>
@@ -409,6 +484,8 @@ const Home = () => {
               <ReactPlayer
                 url={videos[currentVideoIndex]}
                 playing
+                muted
+                controls
                 width="100%"
                 height="100%"
                 onEnded={handleVideoEnd}
@@ -426,14 +503,14 @@ const Home = () => {
             {jobProfiles.length > 0 && (
               <div style={{ position: 'absolute', right: '5px', marginRight: '10px', marginTop: '5%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
-                    Opennings
+                  <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#fff', marginLeft: '10px' }}>
+                    OPENINGS
                   </Typography>
                 </Box>
                 {jobProfiles.map((job: any) => (
                   <Paper key={job.id} sx={{ padding: 2, marginTop: '10px', display: 'flex', alignItems: 'center', minWidth: 500 }}>
                     <div style={{ marginRight: '10px' }}>
-                      <BusinessCenterIcon sx={{ marginRight: '5px', minHeight: 20, minWidth: 20 }} />
+                      <BusinessCenterIcon onClick={() => handleBusinessClick(job.id)} sx={{ cursor: 'pointer', marginRight: '5px', minHeight: 20, minWidth: 20 }} />
                     </div>
                     <div style={{ textAlign: 'left' }}>
                       <Typography variant="h5" style={{ color: '#04d9ff' }}>{job.position}</Typography>
@@ -445,7 +522,14 @@ const Home = () => {
                     </div>
                     <div style={{ marginLeft: 'auto' }}>
                       <Tooltip title="Apply Job" arrow>
-                        <AddCircleOutlineIcon style={{ cursor: 'pointer', color: '#04d9ff' }} />
+                        {jobCheckStatus[job.id] ? (
+                          <CheckCircleOutlineIcon style={{ cursor: 'pointer', color: 'green' }} />
+                        ) : (
+                          <AddCircleOutlineIcon
+                            onClick={() => handleIconClick(job.id)}
+                            style={{ cursor: 'pointer', color: '#04d9ff' }}
+                          />
+                        )}
                       </Tooltip>
                     </div>
                   </Paper>
@@ -455,8 +539,8 @@ const Home = () => {
             {userProfiles.length > 0 && (
               <div style={{ position: 'absolute', left: '5px', marginLeft: '10px', marginTop: '5%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
-                    Peoples
+                  <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#fff', marginLeft: '10px' }}>
+                    PEOPLES
                   </Typography>
                 </Box>
                 {userProfiles.slice(0, visiblePeople).map((user: any) => (
@@ -478,10 +562,17 @@ const Home = () => {
                       <Typography variant="body1" style={{ color: 'grey' }}>{user.skill}</Typography>
                     </div>
                     <div style={{ marginLeft: 'auto' }}>
-                      <Tooltip title="Friend Request" arrow>
-                        <PersonAddIcon style={{ cursor: 'pointer', color: '#04d9ff' }} />
-                      </Tooltip>
-                    </div>
+                {friendRequests.includes(user.id) ? (
+                  <HowToRegIcon onClick={() => handlePersonAddClick(user.id)} style={{ color: '#00ff00' }} />
+                ) : (
+                  <Tooltip title="Friend Request" arrow>
+                    <PersonAddIcon
+                      style={{ cursor: 'pointer', color: '#04d9ff' }}
+                      onClick={() => handlePersonAddClick(user.id)}
+                    />
+                  </Tooltip>
+                )}
+              </div>
                   </Paper>
                 ))}
                 {userProfiles.length > visiblePeople && (
@@ -494,8 +585,8 @@ const Home = () => {
             {companyProfiles.length > 0 && (
               <div style={{ position: 'absolute', left: '5px', marginLeft: '10px', marginTop: '35%' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
-                    Companies
+                  <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#fff', marginLeft: '10px' }}>
+                    COMPANIES
                   </Typography>
                 </Box>
                 {companyProfiles.slice(0, visibleCompanies).map((company: any) => (
@@ -518,10 +609,17 @@ const Home = () => {
                       <Typography variant="body1" style={{ color: 'grey' }}>{company.attributes.headquarters}</Typography>
                     </div>
                     <div style={{ marginLeft: 'auto' }}>
-                      <Tooltip title="Follow" arrow>
-                        <GroupAddIcon style={{ cursor: 'pointer', color: '#04d9ff' }} />
-                      </Tooltip>
-                    </div>
+                {friendRequests.includes(company.id) ? (
+                  <GroupIcon onClick={() => handlePersonAddClick(company.id)} style={{ color: '#00ff00' }} />
+                ) : (
+                  <Tooltip title="Friend Request" arrow>
+                    <GroupAddIcon
+                      style={{ cursor: 'pointer', color: '#04d9ff' }}
+                      onClick={() => handlePersonAddClick(company.id)}
+                    />
+                  </Tooltip>
+                )}
+              </div>
                   </Paper>
                 ))}
                 {companyProfiles.length > visibleCompanies && (
@@ -560,8 +658,8 @@ const Home = () => {
               {postDetails.length > 0 && (
                 <div>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#04d9ff', marginLeft: '10px' }}>
-                      Blogs
+                    <Typography variant="h5" style={{ display: 'flex', alignItems: 'center', color: '#fff', marginLeft: '10px' }}>
+                      BLOGS
                     </Typography>
                   </Box>
                   {postDetails.map((blog: any) => (
@@ -585,8 +683,8 @@ const Home = () => {
 
                         <div style={{ display: 'flex', marginTop: '5px' }}>
                           <Tooltip title="Like" arrow>
-                            <span onClick={handleLikeClick} style={{ cursor: 'pointer', marginRight: '10px' }}>
-                              {isLiked ? <FavoriteIcon style={{ color: '#E1306C' }} /> : <FavoriteBorderIcon />}
+                            <span onClick={() => handleLikeClick(blog.id)} style={{ cursor: 'pointer', marginRight: '10px' }}>
+                              {likes[blog.id] ? <FavoriteIcon style={{ color: '#E1306C' }} /> : <FavoriteBorderIcon />}
                             </span>
                           </Tooltip>
                           <Tooltip title="Comment" arrow>
@@ -599,8 +697,18 @@ const Home = () => {
                       </div>
 
                       <div style={{ marginLeft: 'auto' }}>
-                        <Tooltip title="Add To Favorite" arrow>
-                          <BookmarkIcon style={{ cursor: 'pointer', color: '#04d9ff' }} />
+                        <Tooltip title={bookmarks[blog.id] ? 'Remove From Save' : 'Save'} arrow>
+                          {bookmarks[blog.id] ? (
+                            <BookmarkIcon
+                              style={{ cursor: 'pointer', color: '#04d9ff' }}
+                              onClick={() => handleBookmarkClick(blog.id)}
+                            />
+                          ) : (
+                            <BookmarkBorderIcon
+                              style={{ cursor: 'pointer', color: '#04d9ff' }}
+                              onClick={() => handleBookmarkClick(blog.id)}
+                            />
+                          )}
                         </Tooltip>
                       </div>
                     </Paper>
@@ -608,7 +716,62 @@ const Home = () => {
                 </div>
               )}
             </div>
-
+            <Modal
+              open={openModal}
+              onClose={handleCloseModal}
+            >
+              <div style={{ maxWidth: 500, marginTop: '10%', marginLeft: '30%', borderBlockColor: 'black' }}>
+                {jobDetails && (
+                  <Paper key={jobDetails.id} sx={{ padding: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 500, marginTop: '10%' }}>
+                    <div style={{ marginBottom: '10px' }}>
+                      <img
+                        src={getJobCompanyProfilePhotoUrl(jobDetails)}
+                        alt="company profile"
+                        style={{
+                          width: '150px',
+                          height: '150px',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    </div>
+                    <div style={{ textAlign: 'left', marginBottom: '10px' }}>
+                      <Typography variant="h6" style={{ color: '#04d9ff' }}>{jobDetails.name}</Typography>
+                      <Typography variant="body1" style={{ color: 'grey' }}>{jobDetails.company_type}</Typography>
+                      <Typography variant="body1" style={{ color: 'grey' }}>{jobDetails.founded}</Typography>
+                      <Typography variant="body1" style={{ color: 'grey' }}>{jobDetails.size}</Typography>
+                      <Typography variant="body1" style={{ color: 'grey' }}>{jobDetails.website}</Typography>
+                      <Typography variant="body1" style={{ color: 'grey' }}>{jobDetails.headquarters}</Typography>
+                    </div>
+                    <Paper key={jobDetails.id} sx={{ padding: 2, marginTop: '10px', display: 'flex', alignItems: 'center', maxWidth: 500 }}>
+                      <div style={{ marginRight: '10px' }}>
+                        <BusinessCenterIcon sx={{ marginRight: '5px', minHeight: 20, minWidth: 20 }} />
+                      </div>
+                      <div style={{ textAlign: 'left', marginBottom: '10px' }}>
+                        <Typography variant="h5" style={{ color: '#04d9ff' }}>{jobDetails.position}</Typography>
+                        <Typography variant="body1">
+                          Experience: {jobDetails.experience}
+                        </Typography>
+                        <Typography variant="body2">Salary: ${jobDetails.salary}</Typography>
+                        <Typography variant="body2">description: {jobDetails.small_description}</Typography>
+                      </div>
+                      <div style={{ marginLeft: 'auto' }}>
+                        <Tooltip title={jobCheckStatus[jobDetails.id] ? 'Remove' : 'Apply'} arrow>
+                          {jobCheckStatus[jobDetails.id] ? (
+                            <CheckCircleOutlineIcon onClick={() => handleIconClick(jobDetails.id)} style={{ cursor: 'pointer', color: 'green' }} />
+                          ) : (
+                            <AddCircleOutlineIcon
+                              onClick={() => handleIconClick(jobDetails.id)}
+                              style={{ cursor: 'pointer', color: '#04d9ff' }}
+                            />
+                          )}
+                        </Tooltip>
+                      </div>
+                    </Paper>
+                  </Paper>
+                )}
+              </div>
+            </Modal>
           </div>
         </ThemeProvider>
       )}

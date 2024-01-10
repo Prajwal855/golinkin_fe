@@ -53,11 +53,17 @@ const UserIntro: React.FC = () => {
                     What are you Looking in GoLinkIn for?
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: -10 }}>
-                    <Button variant="contained" onClick={handleToHire} sx={{ minWidth: 200, backgroundColor: '#04d9ff' }}>
+                    <Button variant="contained" onClick={handleToHire} sx={{ minWidth: 200, backgroundColor: '#04d9ff',
+                                                    '&:hover': {
+                                                        backgroundColor: '#70e9ff',
+                                                    } }}>
                         To Hire
                     </Button>
                     <Box sx={{ marginLeft: 2 }}>
-                        <Button variant="contained" onClick={handleToWork} sx={{ minWidth: 200, backgroundColor: '#04d9ff' }}>
+                        <Button variant="contained" onClick={handleToWork} sx={{ minWidth: 200, backgroundColor: '#04d9ff' ,
+                                                    '&:hover': {
+                                                        backgroundColor: '#70e9ff',
+                                                    } }}>
                             To Work
                         </Button>
                     </Box>

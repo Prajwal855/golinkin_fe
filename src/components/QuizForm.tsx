@@ -176,7 +176,10 @@ const QuizForm = () => {
         <Button
           variant="text"
           onClick={handleSkip}
-          sx={{ position: 'absolute', top: '70px', right: '10px', color: '#04d9ff' }}
+          sx={{ position: 'absolute', top: '70px', right: '10px', color: '#04d9ff'  ,
+          '&:hover': {
+              backgroundColor: '#70e9ff',
+          } }}
         >
           Skip
         </Button>

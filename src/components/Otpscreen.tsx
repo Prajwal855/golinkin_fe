@@ -187,7 +187,10 @@ const OTPConfirmation: React.FC = () => {
                   ))}
                   <br />
                   <br />
-                  <Button data-testid="submit" variant="contained" onClick={handleVerifyOtp} sx={{ minWidth: 200, backgroundColor: '#04d9ff' }}>
+                  <Button data-testid="submit" variant="contained" onClick={handleVerifyOtp} sx={{ minWidth: 200, backgroundColor: '#04d9ff' ,
+                                                    '&:hover': {
+                                                        backgroundColor: '#70e9ff',
+                                                    }  }}>
                     Verify OTP
                   </Button>
                 </div>

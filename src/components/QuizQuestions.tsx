@@ -147,16 +147,25 @@ const QuizQuestions = () => {
                 </FormControl>
                 <div style={{ position: 'absolute', bottom: '10px', left: 70, right: 10, display: 'flex', justifyContent: 'space-between', padding: '10px' }}>
                   {currentQuestionIndex > 0 && (
-                    <Button variant="contained" color="primary" onClick={handlePreviousQuestion}>
+                    <Button variant="contained" color="primary" onClick={handlePreviousQuestion} sx={{ backgroundColor: '#04d9ff' ,
+                    '&:hover': {
+                        backgroundColor: '#70e9ff',
+                    }  }}>
                       Previous
                     </Button>
                   )}
                   {currentQuestionIndex < questions.length - 1 ? (
-                    <Button variant="contained" color="primary" onClick={handleNextQuestion}>
+                    <Button variant="contained" color="primary" onClick={handleNextQuestion} sx={{ backgroundColor: '#04d9ff' ,
+                    '&:hover': {
+                        backgroundColor: '#70e9ff',
+                    }  }}>
                       Next
                     </Button>
                   ) : (
-                    <Button variant="contained" color="primary" onClick={handleFinishQuiz}>
+                    <Button variant="contained" color="primary" onClick={handleFinishQuiz} sx={{ backgroundColor: '#04d9ff' ,
+                    '&:hover': {
+                        backgroundColor: '#70e9ff',
+                    }  }}>
                       Finish Quiz
                     </Button>
                   )}

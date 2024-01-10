@@ -322,7 +322,10 @@ const Signup = () => {
                     type="submit"
                     disabled={!firstname || !email || !phoneNumber || !role || !password || !lastname || !confirmPassword}
                     onClick={handleSubmit}
-                    sx={{ width: '100%', marginTop: '4%', backgroundColor: '#04d9ff' }}
+                    sx={{ width: '100%', marginTop: '4%', backgroundColor: '#04d9ff'  ,
+                    '&:hover': {
+                        backgroundColor: '#70e9ff',
+                    } }}
                   >
                     Sign Up
                   </Button>

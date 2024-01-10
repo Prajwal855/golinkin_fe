@@ -340,7 +340,10 @@ const Companies = () => {
                                         type="submit"
                                         onClick={handleSubmit}
                                         disabled={isSubmitDisabled()}
-                                        sx={{ width: '100%', marginTop: '4%', backgroundColor: '#04d9ff' }}
+                                        sx={{ width: '100%', marginTop: '4%', backgroundColor: '#04d9ff'  ,
+                                        '&:hover': {
+                                            backgroundColor: '#70e9ff',
+                                        }  }}
                                     >
                                         Submit
                                     </Button>

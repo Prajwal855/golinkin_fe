@@ -36,7 +36,7 @@ export default function ProductHero() {
         size="large"
         component="a"
         href="/Intro"
-        sx={{ minWidth: 200 }}
+        sx={{ minWidth: 200  }}
       >
         Register
       </Button>
